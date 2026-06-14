@@ -1,134 +1,384 @@
-============================================================
- ThreatWatch - A Mini SIEM System in C++
- Data Structures & Algorithms Project
-============================================================
-
-WHAT IT IS
-----------
-ThreatWatch is a console-based Security Information and Event
-Management (SIEM) prototype written entirely in C++. It solves
-eight operational problems of a security monitoring platform,
-each using the data structure best suited to the task.
-
-It uses ONLY the C++ standard library (STL) - no external
-dependencies, no GUI, no database.
+╔════════════════════════════════════════════════════════════════════════════╗
+║                          THREATWATCH - SIEM SYSTEM                        ║
+║              A Console-Based Security Monitoring Platform in C++            ║
+╚════════════════════════════════════════════════════════════════════════════╝
 
 
-FILES IN THIS SUBMISSION
-------------------------
-  threatwatch.cpp               - the full implementation (single file)
-  ThreatWatch_Justification.docx - design rationale + SIEM tool mapping
-  README.txt                    - this file
-  Screenshots                   -  Screenshots demonstrating program execution
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PROJECT OVERVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ThreatWatch is a console-based SIEM (Security Information and Event Management)
+prototype written entirely in C++. It solves eight operational problems of
+security monitoring platforms—each using the optimal data structure for the task.
+
+✓ Pure C++ using only the standard library (STL)
+✓ No external dependencies, GUI, or database
+✓ Single-file implementation (~300 lines)
+✓ Interactive menu-driven interface
+✓ Pre-loaded with demo data for immediate testing
 
 
-REQUIREMENTS
-------------
-  - A C++ compiler supporting C++17 (g++ 7+ or clang)
-  - Works on Linux, macOS, or Windows (MinGW / WSL / MSVC)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PROBLEM STATEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Modern security systems must process thousands of activity logs per second.
+ThreatWatch addresses these 8 critical operational challenges:
+
+  1. SLOW KEYWORD SCANNING
+     Problem: Scanning logs against attack patterns using a simple list is O(n)
+     per log — unscalable for high-volume environments.
+     Solution: Hash Set for O(1) lookup
+
+  2. NO SESSION TRACING
+     Problem: When a user's session is compromised, there's no efficient way to
+     reconstruct backwards through their activity sequence.
+     Solution: Stack (LIFO) for step-by-step session replay
+
+  3. UNORDERED ALERT HANDLING
+     Problem: Alerts arrive in massive volumes and are processed randomly,
+     leaving critical breaches waiting behind routine alerts.
+     Solution: Queue (FIFO) for fair, sequential processing
+
+  4. SLOW DEVICE LOOKUP
+     Problem: Finding a device by ID in an unsorted list requires linear search.
+     Solution: Hash Map for O(1) device identification
+
+  5. NO SEVERITY PRIORITIZATION
+     Problem: All alerts treated equally regardless of danger level.
+     Solution: Max-Heap (Priority Queue) to handle critical threats first
+
+  6. NO NETWORK TOPOLOGY
+     Problem: Without a map of server links, tracing lateral movement is
+     manual guesswork.
+     Solution: Graph (Adjacency List) for network representation
+
+  7. NO AUTOMATED ATTACK TRACING
+     Problem: Finding the fastest path from detection point to attack origin
+     requires human analysis.
+     Solution: BFS algorithm on graph for shortest-path detection
+
+  8. UNBALANCED LOAD
+     Problem: Analysis work isn't distributed, creating bottlenecks while
+     other servers sit idle.
+     Solution: Min-Heap (Priority Queue) for intelligent load balancing
 
 
-HOW TO COMPILE
---------------
-  Linux / macOS:
-      g++ -std=c++17 threatwatch.cpp -o threatwatch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PROJECT FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Windows (MinGW):
-      g++ -std=c++17 threatwatch.cpp -o threatwatch.exe
-
-
-HOW TO RUN
-----------
-  Linux / macOS:
-      ./threatwatch
-
-  Windows:
-      threatwatch.exe
-
-The program starts with demo data already loaded (threat
-keywords, two devices, a 5-server network, and three balancer
-nodes), so every feature can be demonstrated immediately.
+  📄 threatwatch.cpp                  Main implementation (single file, ~300 lines)
+  📄 ThreatWatch_Justification.docx   Design rationale & real SIEM tool mapping
+  📄 README.txt                       This file
+  📁 Screenshots/                     Demonstration screenshots
 
 
-THE 8 FEATURES (and their data structures)
-------------------------------------------
-  1. Threat List    - Hash Set        : instant keyword scanning of logs
-  2. Login History  - Stack (LIFO)     : step back through session activity
-  3. Alert Line     - Queue (FIFO)     : buffer alerts in arrival order
-  4. Device Lookup  - Hash Map         : find a device by unique ID
-  5. Danger Sorter  - Max-Heap         : handle most severe alert first
-  6. Network Map    - Graph (adj list) : show how servers are linked
-  7. Event Tracer   - BFS on the graph : fastest path back to source
-  8. Data Balancer  - Min-Heap         : assign work to least-busy server
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ SYSTEM REQUIREMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  • C++ compiler supporting C++17 or later (g++ 7+, clang, MSVC)
+  • Supports: Linux, macOS, Windows (MinGW/WSL/MSVC)
+  • No external libraries required (uses only C++ STL)
 
 
-MENU GUIDE
-----------
-On launch you see a numbered menu (0-8). Type a number and press
-Enter. Some options ask a follow-up (e.g. "1=add  2=process").
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ QUICK START
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  COMPILE:
+  ────────
+    Linux / macOS:
+      $ g++ -std=c++17 threatwatch.cpp -o threatwatch
+
+    Windows (MinGW):
+      $ g++ -std=c++17 threatwatch.cpp -o threatwatch.exe
+
+  RUN:
+  ────
+    Linux / macOS:
+      $ ./threatwatch
+
+    Windows:
+      $ threatwatch.exe
+
+  DEMO DATA:
+  ──────────
+  The program launches with pre-loaded data:
+    • Threat keywords: "sql injection", "brute force", "malware"
+    • Devices: DEV-101 (Finance-PC), DEV-102 (HR-Laptop)
+    • Network: 5 servers (Web, App, DB, Firewall, Backup)
+    • Load balancers: 3 nodes (Node-A, Node-B, Node-C)
 
 
-DEMO WALKTHROUGH (recommended for evaluation)
----------------------------------------------
-Run the program and enter the following to exercise all 8 features:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 8 CORE FEATURES & DATA STRUCTURES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  Option 1  (Threat List)
-     -> type:  user attempted sql injection on login form
-     Expected: THREAT DETECTED: "sql injection"
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 1. THREAT LIST (Hash Set)                                               │
+  │    Fast keyword scanning of incoming log lines                          │
+  │    Time Complexity: O(1) lookup                                         │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 1  (clean log test)
-     -> type:  user opened dashboard
-     Expected: log is clean
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 2. LOGIN HISTORY (Stack - LIFO)                                         │
+  │    Step backwards through user session activity for forensics           │
+  │    Time Complexity: O(1) push/pop                                       │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 2  (Login History) -> choose 1, action: "viewed reports"
-  Option 2  (Login History) -> choose 1, action: "downloaded file"
-  Option 2  (Login History) -> choose 2
-     Expected: stepping back from: downloaded file   (LIFO order)
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 3. ALERT LINE (Queue - FIFO)                                            │
+  │    Buffer incoming alerts in strict arrival order                       │
+  │    Time Complexity: O(1) enqueue/dequeue                                │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 3  (Alert Line) -> choose 1, alert: "failed login"
-  Option 3  (Alert Line) -> choose 1, alert: "port scan"
-  Option 3  (Alert Line) -> choose 2
-     Expected: processing (FIFO): failed login       (FIFO order)
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 4. DEVICE LOOKUP (Hash Map)                                             │
+  │    Find device info instantly by unique ID (IP, MAC, hostname)          │
+  │    Time Complexity: O(1) lookup                                         │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 4  (Device Lookup) -> ID: DEV-101
-     Expected: found: DEV-101 -> Finance-PC (192.168.1.10)
-  Option 4  (Device Lookup) -> ID: DEV-999
-     Expected: device DEV-999 not found
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 5. DANGER SORTER (Priority Queue - Max Heap)                            │
+  │    Always handle the most critical/dangerous alert first                │
+  │    Time Complexity: O(log n) insertion/deletion                         │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 5  (Danger Sorter) -> 1, severity 3, msg "minor warning"
-  Option 5  (Danger Sorter) -> 1, severity 9, msg "ransomware detected"
-  Option 5  (Danger Sorter) -> 1, severity 5, msg "suspicious login"
-  Option 5  (Danger Sorter) -> 2
-     Expected: handling MOST CRITICAL (sev 9): ransomware detected
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 6. NETWORK MAP (Graph - Adjacency List)                                 │
+  │    Visualize how servers are connected in the network topology          │
+  │    Space: O(V + E) for V vertices, E edges                              │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 6  (Network Map)
-     Expected: prints all server links (Web, App, DB, Firewall, Backup)
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 7. EVENT TRACER (BFS Algorithm on Graph)                                │
+  │    Find the fastest path from detection point to attack origin          │
+  │    Time Complexity: O(V + E) breadth-first search                       │
+  └─────────────────────────────────────────────────────────────────────────┘
 
-  Option 7  (Event Tracer) -> From: Web   To: Backup
-     Expected: fastest trace: Web -> App -> DB -> Backup
-
-  Option 8  (Data Balancer)  [run 3-4 times]
-     Expected: jobs distributed to least-loaded node each time
-               (Node-A, then Node-B, then Node-C, then Node-A ...)
-
-  Option 0  -> Exit
-
-
-PRE-LOADED DEMO DATA
---------------------
-  Threat keywords : "sql injection", "brute force", "malware"
-  Devices         : DEV-101 (Finance-PC), DEV-102 (HR-Laptop)
-  Network links   : Web<->App, App<->DB, Web<->Firewall, DB<->Backup
-  Balancer nodes  : Node-A, Node-B, Node-C
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │ 8. DATA BALANCER (Priority Queue - Min Heap)                            │
+  │    Distribute security analysis jobs to least-loaded server             │
+  │    Time Complexity: O(log n) insertion/deletion                         │
+  └─────────────────────────────────────────────────────────────────────────┘
 
 
-NOTES FOR EVALUATION
---------------------
-  - Event Tracer uses BFS because the network is UNWEIGHTED, so the
-    fewest-hops path is the shortest path. If links carried a cost
-    (latency / trust), Dijkstra's algorithm would replace BFS without
-    changing the underlying graph.
-  - All structures map to real SIEM mechanisms (Splunk / Elastic
-    Security); see ThreatWatch_Justification.docx, Section 4.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ INTERACTIVE MENU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-============================================================
+The program displays a numbered menu (0-8) on startup. Enter a number and press
+Enter. Some options have sub-menus (e.g., "1=add threat, 2=remove threat").
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ GUIDED DEMO WALKTHROUGH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Follow these steps to exercise all 8 features:
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 1: THREAT LIST (Hash Set)                                       ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 1
+  Input: "user attempted sql injection on login form"
+  Expected Output: [!] THREAT DETECTED: "sql injection" in log
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 2: THREAT LIST - CLEAN LOG                                      ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 1
+  Input: "user opened dashboard"
+  Expected Output: [ok] log is clean
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 3: LOGIN HISTORY (Stack - LIFO)                                 ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 2 → Sub-choice: 1
+  Action: "viewed reports"
+  Expected Output: step recorded: viewed reports
+
+  Option: 2 → Sub-choice: 1
+  Action: "downloaded file"
+  Expected Output: step recorded: downloaded file
+
+  Option: 2 → Sub-choice: 2
+  Expected Output: stepping back from: downloaded file (LIFO - last in, first out!)
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 4: ALERT LINE (Queue - FIFO)                                    ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 3 → Sub-choice: 1
+  Alert: "failed login"
+  Expected Output: buffered: failed login
+
+  Option: 3 → Sub-choice: 1
+  Alert: "port scan"
+  Expected Output: buffered: port scan
+
+  Option: 3 → Sub-choice: 2
+  Expected Output: processing (FIFO): failed login (first one processed first!)
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 5: DEVICE LOOKUP (Hash Map)                                     ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 4
+  Device ID: "DEV-101"
+  Expected Output: found: DEV-101 -> Finance-PC (192.168.1.10)
+
+  Option: 4
+  Device ID: "DEV-999"
+  Expected Output: device DEV-999 not found (graceful miss)
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 6: DANGER SORTER (Priority Queue - Max Heap)                    ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 5 → Sub-choice: 1, Severity: 3, Message: "minor warning"
+  Expected Output: added (sev 3): minor warning
+
+  Option: 5 → Sub-choice: 1, Severity: 9, Message: "ransomware detected"
+  Expected Output: added (sev 9): ransomware detected
+
+  Option: 5 → Sub-choice: 1, Severity: 5, Message: "suspicious login"
+  Expected Output: added (sev 5): suspicious login
+
+  Option: 5 → Sub-choice: 2
+  Expected Output: handling MOST CRITICAL (sev 9): ransomware detected
+                   (Highest severity = first to be handled!)
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 7: NETWORK MAP (Graph - Adjacency List)                         ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 6
+  Expected Output:
+    Web <-> App Firewall
+    App <-> Web DB
+    DB <-> App Backup
+    Firewall <-> Web
+    Backup <-> DB
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 8: EVENT TRACER (BFS - Shortest Path)                           ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 7
+  From: "Web"
+  To: "Backup"
+  Expected Output: fastest trace: Web -> App -> DB -> Backup
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ TEST 9: DATA BALANCER (Priority Queue - Min Heap)                    ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 8 (run this 4-5 times)
+  Expected Output (round-robin to least-loaded):
+    job -> Node-A (load was 0)
+    job -> Node-B (load was 0)
+    job -> Node-C (load was 0)
+    job -> Node-A (load was 1)    ← Cycles back to least-loaded node
+    (and so on...)
+
+
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ EXIT                                                                   ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  Option: 0
+  Expected Output: Bye.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PRE-LOADED DEMO DATA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The system launches with the following test data:
+
+  THREAT KEYWORDS:
+    ► "sql injection"
+    ► "brute force"
+    ► "malware"
+
+  REGISTERED DEVICES:
+    ► DEV-101  Finance-PC (192.168.1.10)
+    ► DEV-102  HR-Laptop (192.168.1.11)
+
+  NETWORK TOPOLOGY:
+    ► Web ↔ App
+    ► App ↔ DB
+    ► Web ↔ Firewall
+    ► DB ↔ Backup
+
+  LOAD BALANCER NODES:
+    ► Node-A
+    ► Node-B
+    ► Node-C
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ TECHNICAL NOTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ► BFS for Event Tracer:
+    The network is UNWEIGHTED, so BFS guarantees the fewest-hops path is the
+    shortest path. If network links carried a cost (latency, trust score),
+    Dijkstra's algorithm would replace BFS without changing the graph structure.
+
+  ► Real-World SIEM Mapping:
+    Each ThreatWatch component maps to production SIEM tools:
+      • Threat List           → Splunk/Elastic pattern matching
+      • Login History         → Audit log reversal / forensics
+      • Alert Line            → Message queuing (Kafka, RabbitMQ)
+      • Device Lookup         → Asset inventory databases
+      • Danger Sorter         → Alert triage & escalation
+      • Network Map           → Network topology discovery
+      • Event Tracer          → Lateral movement detection
+      • Data Balancer         → Distributed log analysis (Elasticsearch nodes)
+
+    See ThreatWatch_Justification.docx for detailed mapping.
+
+  ► Memory Model:
+    All data lives in memory (no persistence). Program state resets on exit.
+    This is intentional for a prototype; production systems use persistent stores.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ CODE STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The ~300-line implementation is organized as follows:
+
+  ► Includes & Namespace
+  ► 8 Class Definitions (one per data structure)
+  ► Helper Structs (Alert, Server)
+  ► main() function with menu loop
+  ► Standard input/output only (no external I/O)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ LEARNING OUTCOMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+By studying and interacting with ThreatWatch, you will understand:
+
+  ✓ When to use Hash Sets for O(1) lookup
+  ✓ When Stack LIFO semantics solve audit/undo problems
+  ✓ When Queue FIFO semantics ensure fairness
+  ✓ When Hash Maps provide instant key-value lookup
+  ✓ How Priority Queues (heaps) implement custom sorting
+  ✓ Graph representations (adjacency lists) for networks
+  ✓ BFS algorithm for shortest-path detection
+  ✓ Load balancing strategies using data structures
+  ✓ How to apply DSA concepts to real security problems
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                 Questions? See ThreatWatch_Justification.docx              ║
+║                    For more details on architecture & design               ║
+╚════════════════════════════════════════════════════════════════════════════╝
